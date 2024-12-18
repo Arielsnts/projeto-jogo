@@ -1,2 +1,1 @@
-# jogo
- 
+# PROJETO: Jogo estilo space invaders

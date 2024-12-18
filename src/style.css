@@ -1,13 +1,13 @@
-@font-face {
+/* @font-face {
     font-family: 'army';
     src: url(assets/ARMYRUST.ttf) format('truetype');
-}
+} */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "army", sans-serif
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 canvas {

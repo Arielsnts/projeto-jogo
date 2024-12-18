@@ -1,0 +1,1 @@
+export const PATH_HERO = "src/assets/hero.png"
