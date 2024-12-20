@@ -1,3 +1,4 @@
+import Enemy from "./classes/enemy.js"
 import Player from "./classes/Player.js"
 
 const canvas = document.querySelector("canvas")
@@ -8,8 +9,15 @@ canvas.height = innerHeight
 
 ctx.imageSmoothingEnabled = false
 
+const randomNum = () => {
+    return Math.floor(Math.random() * (2 - 2) + 2);
+}
+
 const player = new Player(canvas.width, canvas.height)
 const playerShot = []
+
+const enemy = new Enemy(2, canvas.width)
+const enemyList = []
 
 const keys = {
     left: false,
@@ -17,6 +25,14 @@ const keys = {
     shot: {
         pressed: false,
         released: true
+    }
+}
+
+let formation
+
+const drawEnemy = (enemyList) => {
+    if (enemyList.length > 0) {
+        enemy.draw(formation, ctx)
     }
 }
 
@@ -38,6 +54,61 @@ const clearShot = () => {
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+    if (enemyList.length === 0) {
+        formation = randomNum()
+        if (formation === 1) enemyList.push(1, 1, 1, 1)
+        else if (formation === 2 || formation == 3) enemyList.push(1, 1, 1, 1, 1)
+    }
+
+    if (enemy.line1Height <= canvas.height / 2 - 120) {enemy.moveDown()}
+
+    // Movimentação da formação 1
+    if (formation === 1) {
+        if (enemy.line1Height === Math.ceil(canvas.height / 2 - 120) && enemy.formation1Line1 <= canvas.width - 400) {
+            enemy.moveRightLine1()
+            if (enemy.formation1Line1 == (canvas.width - 400) + 1) {enemy.line1Height -=1}
+        }
+
+        if (enemy.line1Height === Math.ceil(canvas.height / 2 - 120) + 1 && enemy.formation1Line1 > 25) {
+            enemy.moveLeftLine1()
+            if (enemy.formation1Line1 == 25) {enemy.line1Height -= 1}
+        }
+
+        // separação
+        if (enemy.line2Height === Math.ceil(canvas.height / 2 - 290) && enemy.formation1Line2 > 25) {
+            enemy.moveLeftLine2()
+            if (enemy.formation1Line2 == 25) {enemy.line2Height -=1}
+        }
+
+        if (enemy.line2Height === Math.ceil(canvas.height / 2 - 290) + 1 && enemy.formation1Line2 <= canvas.width - 400) {
+            enemy.moveRightLine2()
+            if (enemy.formation1Line1 == 25) {enemy.line2Height -= 1}
+        }
+    }
+    // Movimentação da formação 2
+    if (formation === 2) {
+        if (enemy.line1Height === Math.ceil(canvas.height / 2 - 120) && enemy.formation2Line1 <= canvas.width - 800) {
+            enemy.moveRightLine1()
+            if (enemy.formation2Line1 == (canvas.width - 800) + 1) {enemy.line1Height -=1}
+        }
+
+        if (enemy.line1Height === Math.ceil(canvas.height / 2 - 120) + 1 && enemy.formation2Line1 > 25) {
+            enemy.moveLeftLine1()
+            if (enemy.formation2Line1 == 25) {enemy.line1Height -= 1}
+        }
+
+        if (enemy.line2Height === Math.ceil(canvas.height / 2 - 290) && enemy.formation1Line2 > 25) {
+            enemy.moveLeftLine2()
+            if (enemy.formation2Line2 == 25) {enemy.line2Height -=1}
+        }
+
+        if (enemy.line2Height === Math.ceil(canvas.height / 2 - 290) + 1 && enemy.formation2Line2 <= canvas.width - 400) {
+            enemy.moveRightLine2()
+            if (enemy.formation2Line1 == 25) {enemy.line2Height -= 1}
+        }
+    }
+
+
     drawShot()
     clearShot()
 
@@ -47,14 +118,14 @@ const gameLoop = () => {
     }
 
     if (keys.left && player.position.x >= 0) player.moveLeft()
-    
+        
     if (keys.rigth && player.position.x <= canvas.width - player.width) player.moveRigth()
-
+        
     player.draw(ctx)
-
+    drawEnemy(enemyList)
+        
     requestAnimationFrame(gameLoop)
 }
-
 gameLoop()
 
 addEventListener("keydown", (event) => {

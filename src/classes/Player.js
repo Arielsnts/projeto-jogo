@@ -3,8 +3,8 @@ import Gunshot from "./Gunshot.js"
 
 class Player{
     constructor(canvasWidth, canvasHeight) {
-        this.width = 90
-        this.heigth = 90
+        this.width = 100 * 0.8
+        this.heigth = 100 * 0.8
         this.velocity = 8
         this.position = {
             x: canvasWidth / 2 - this.width / 2,
